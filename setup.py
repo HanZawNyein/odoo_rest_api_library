@@ -4,12 +4,12 @@ with open("README.md", "r") as fh:
     description = fh.read()
 
 setup(
-    name="REST API Library",
-    version="1.0.0.1",
+    name="Odoo_API_Library",
+    version="1.0.0.2",
     description="Store user access token for one-time-login",
     long_description=description,
     long_description_content_type="text/markdown",
-    packages=['rest_api_library'],
+    packages=['Odoo_API_Library'],
     author="Han Zaw Nyein",
     author_email="hanzawnyineonline@gmail.com",
     zip_safe=False,

@@ -1,5 +1,5 @@
 .idea
 venv
 **/__pycache__/**
-REST_API_Library.egg-info/
+Odoo_API_Library.egg-info/
 dist/
