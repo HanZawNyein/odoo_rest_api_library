@@ -1,7 +1,7 @@
 from odoo import http
 import odoo
 from odoo.http import request, Response
-from . import Validator
+from .Validator import validator
 import simplejson as json
 from tzwhere import tzwhere
 from datetime import datetime, date

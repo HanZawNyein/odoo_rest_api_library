@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="Odoo_API_Library",
-    version="1.0.0.3",
+    version="1.0.0.4",
     description="Store user access token for one-time-login",
     long_description=description,
     long_description_content_type="text/markdown",
