@@ -97,3 +97,6 @@ class Validator:
             result['message'] = 'Token invalid or expired'
             _logger.error(traceback.format_exc())
             return result
+
+
+validator = Validator()

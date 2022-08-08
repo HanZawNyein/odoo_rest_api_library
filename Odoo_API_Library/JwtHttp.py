@@ -6,7 +6,9 @@ import simplejson as json
 from tzwhere import tzwhere
 from datetime import datetime, date
 import pytz
-return_fields = ['id', 'login', 'name', 'company_id','noti_token']
+
+return_fields = ['id', 'login', 'name', 'company_id', 'noti_token']
+
 
 class JwtHttp:
     def __init__(self):
@@ -73,7 +75,8 @@ class JwtHttp:
 
         return Response(payload, status=code, headers=[
             # ('Host', 'localhost:8074'),
-            ('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'),
+            ('Access-Control-Allow-Headers',
+             'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'),
             ('Access-Control-Allow-Origin', '*'),
             ('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, PUT, POST'),
             ('Access-Control-Allow-Headers', 'Authorization'),
@@ -93,8 +96,7 @@ class JwtHttp:
     def errcode(self, code, message=None):
         return self.response(success=False, code=code, message=message)
 
-
-    def do_login(self, login, password,noti_token):
+    def do_login(self, login, password, noti_token):
         # get current db
         state = self.get_state()
         uid = request.session.authenticate(state['d'], login, password)
@@ -105,16 +107,16 @@ class JwtHttp:
         # login success, generate token
         user = request.env.user.read(return_fields)[0]
         token = Validator.create_token(user)
-        return self.response(data={ 'user': user, 'token': token})
-    
-    def get_leave_list(self, leave_type,report_id,related_hr_id):
+        return self.response(data={'user': user, 'token': token})
+
+    def get_leave_list(self, leave_type, report_id, related_hr_id):
         http_method, body, headers, token = JwtHttp.parse_request()
         result = Validator.verify_token(token)
         if not result['status']:
             return JwtHttp.errcode(code=result['code'], message=result['message'])
-        
+
         # DOMAIN
-        domain=[]
+        domain = []
         date = datetime.now().strftime('%Y-%m-%d')
         fiscal_id = request.env['hr.fiscal.year'].sudo().search(
             [('date_from', '<=', date), ('date_to', '>=', date), ('active', '=', True)])
@@ -126,22 +128,26 @@ class JwtHttp:
             date_to = fiscal_id[0].date_to
 
         employee = request.env['hr.employee'].sudo().search([('user_id', '=', request.env.user.id)])
-        
-        if leave_type == 'All' and report_id == 0 and related_hr_id == 0:    
+
+        if leave_type == 'All' and report_id == 0 and related_hr_id == 0:
             domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to)]
 
         elif leave_type != 'All' and report_id == 0 and related_hr_id == 0:
-            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),('holiday_status_id.name','=',leave_type)]
+            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),
+                      ('holiday_status_id.name', '=', leave_type)]
 
         elif leave_type == 'All' and report_id != 0 and related_hr_id == 0:
-            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),('report_id','=',report_id)]
+            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),
+                      ('report_id', '=', report_id)]
 
         else:
-            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),('related_hr_id','=',related_hr_id)]
+            domain = [('request_date_to', '>=', date_from), ('request_date_to', '<=', date_to),
+                      ('related_hr_id', '=', related_hr_id)]
 
         fields = [
-            'department_id', 'holiday_type', 'holiday_status_id', 'employee_id','related_hr_id','report_id','charge_id',
-            'name', 'request_date_from', 'request_date_to', 'duration_display', 'state', 'payslip_status','attach'
+            'department_id', 'holiday_type', 'holiday_status_id', 'employee_id', 'related_hr_id', 'report_id',
+            'charge_id',
+            'name', 'request_date_from', 'request_date_to', 'duration_display', 'state', 'payslip_status', 'attach'
         ]
         data = request.env['hr.leave'].sudo().search_read(domain, fields=fields)
         for i in data:
@@ -159,18 +165,19 @@ class JwtHttp:
         # Clean up things after success request
         # use logout here to make request as stateless as possible
 
-
-
         request.session.logout()
 
     def get_tz_where(self):
         return self.tz_where
 
-    def current_datetime_in_float(self,lat,lon):
+    def current_datetime_in_float(self, lat, lon):
         timezone_str = self.tz_where.tzNameAt(float(lat), float(lon))
         # current_time_in_float 
         tz = pytz.timezone(timezone_str)
         dt_with_tz = datetime.datetime.now(tz)
         a = dt_with_tz.replace(tzinfo=None)
         current_time_in_float = (a - datetime.datetime.combine(a.date(), datetime.time())).total_seconds() / 3600
-        return {'date':a.date(), 'time': current_time_in_float}
+        return {'date': a.date(), 'time': current_time_in_float}
+
+
+jwt_http = JwtHttp()

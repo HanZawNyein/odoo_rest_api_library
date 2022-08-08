@@ -3,16 +3,19 @@ import string
 import os
 from dateutil.parser import parse
 import logging
+
 _logger = logging.getLogger(__name__)
+
 
 class Util:
     addons_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+
     def __init__(self):
         self.addons_path = self.addons_path.replace('jwt_provider', '')
 
     def generate_verification_code(self, len=8):
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(len))
-    
+
     def toDate(self, pgTimeStr):
         return parse(pgTimeStr)
 
@@ -64,8 +67,8 @@ class Util:
         tree[key] = value \
             if len(vector) == 1 \
             else self.add_branch(tree[key] if key in tree else {},
-                            vector[1:],
-                            value)
+                                 vector[1:],
+                                 value)
         return tree
 
     def create_dict(self, d):
@@ -76,7 +79,10 @@ class Util:
             self.add_branch(res, ar, v)
         return res
 
-    def false_to_none_in_dict(self,obj):
+    def false_to_none_in_dict(self, obj):
         for i in obj:
             if obj[i] == False:
                 obj[i] = None
+
+
+util = Util()
