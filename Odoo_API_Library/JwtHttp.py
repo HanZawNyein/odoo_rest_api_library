@@ -106,12 +106,12 @@ class JwtHttp:
             return self.errcode(code=400, message='incorrect login')
         # login success, generate token
         user = request.env.user.read(return_fields)[0]
-        token = Validator.create_token(user)
+        token = validator.create_token(user)
         return self.response(data={'user': user, 'token': token})
 
     def get_leave_list(self, leave_type, report_id, related_hr_id):
         http_method, body, headers, token = JwtHttp.parse_request()
-        result = Validator.verify_token(token)
+        result = validator.verify_token(token)
         if not result['status']:
             return JwtHttp.errcode(code=result['code'], message=result['message'])
 
