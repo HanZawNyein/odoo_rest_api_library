@@ -1,5 +1,6 @@
 from . import (
     JwtHttp,
     Util,
-    Validator
+    Validator,
+    firebase
 )

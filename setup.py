@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="Odoo_API_Library",
-    version="1.0.0.5",
+    version="1.1.1.2",
     description="Store user access token for one-time-login",
     long_description=description,
     long_description_content_type="text/markdown",
@@ -13,5 +13,5 @@ setup(
     author="Han Zaw Nyein",
     author_email="hanzawnyineonline@gmail.com",
     zip_safe=False,
-    install_requires=['PyJWT', 'simplejson']
+    install_requires=['PyJWT', 'simplejson','requests']
 )
