@@ -1,19 +1,14 @@
 from odoo import http
-import odoo
 from odoo.http import request, Response
 from .Validator import validator
 import simplejson as json
-from tzwhere import tzwhere
-from datetime import datetime, date
+from datetime import datetime
 import pytz
 
 return_fields = ['id', 'login', 'name', 'company_id', 'noti_token']
 
 
 class JwtHttp:
-    def __init__(self):
-        self.tz_where = tzwhere.tzwhere()
-
     def get_state(self):
         return {
             'd': request.session.db
@@ -167,8 +162,6 @@ class JwtHttp:
 
         request.session.logout()
 
-    def get_tz_where(self):
-        return self.tz_where
 
     def current_datetime_in_float(self, lat, lon):
         timezone_str = self.tz_where.tzNameAt(float(lat), float(lon))

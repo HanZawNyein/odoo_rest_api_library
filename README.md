@@ -1,6 +1,6 @@
 # REST API Library
 
-### Version : 1.1.3
+### Version : 1.1.4
 ### Description : Store user access token for one-time-login
 ### Package : rest_api_library 
 ###### package link : https://pypi.org/project/Odoo-API-Library
